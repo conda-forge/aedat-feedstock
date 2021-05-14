@@ -19,7 +19,8 @@ requirements:
     - {{ compiler('c') }}
   host:
     - python
-    - pip
+    - pip  # [python_impl == 'cpython']
+    - pip 19.*  # [python_impl == 'pypy']
     - maturin
   run:
     - python
