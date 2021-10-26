@@ -1,5 +1,5 @@
 {% set name = "aedat" %}
-{% set version = "1.2.1" %}
+{% set version = "1.2.2" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/aedat-{{ version }}.tar.gz
-  sha256: 5256ef9cc5acf8f53b51d7b441aff17a6f9f9fd69c8ae0eba284e95a2b387262
+  sha256: 33683279d8cd79add0bb3e2117fda32be71d546b403c4efcf6968b3a974ae4bd
 
 build:
   number: 0
