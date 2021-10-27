@@ -14,7 +14,6 @@ cargo install cargo-license
 REM Check that all downstream libraries licenses are present
 set PATH=%PATH%;%CARGO_HOME%\bin
 cargo-license --json > dependencies.json
-cat dependencies.json
 python %RECIPE_DIR%\check_licenses.py
 
 REM Use PEP517 to install the package
@@ -27,4 +26,4 @@ REM set UTF-8 mode by default
 chcp 65001
 set PYTHONUTF8=1
 set PYTHONIOENCODING="UTF-8"
-FOR %%w in (*.whl) DO %PYTHON% -m pip install %%w --build tmpbuild_%PY_VER%
+FOR %%w in (*.whl) DO %PYTHON% -m pip install %%w
