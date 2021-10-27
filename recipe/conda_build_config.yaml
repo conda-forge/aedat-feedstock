@@ -1,3 +1,3 @@
 # Rust Compiler Options
 rust_compiler_version:
-  - 1.56.0
+  - 1.56.0.dev20210816
