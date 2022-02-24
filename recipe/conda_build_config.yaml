@@ -1,4 +1,2 @@
 channel_sources:
   - conda-forge/label/rust_dev,conda-forge
-rust_compiler_version:
-  - 1.56.0.dev20210816
