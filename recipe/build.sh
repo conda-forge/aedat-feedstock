@@ -8,18 +8,22 @@ export CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER=$CC
 # Print Rust version
 rustc --version
 
-### Assert licenses are available
-# Install cargo-license
-export CARGO_HOME="$BUILD_PREFIX/cargo"
-mkdir $CARGO_HOME
-cargo install cargo-license
+# Only check licenses on linux-64, as cargo-license
+# fails to compile/run on other platforms
+if [ ${target_platform} == "linux-64" ]; then
+  ### Assert licenses are available
+  # Install cargo-license
+  export CARGO_HOME="$BUILD_PREFIX/cargo"
+  mkdir $CARGO_HOME
+  cargo install cargo-license
 
-# Check that all downstream libraries licenses are present
-export PATH=$PATH:$CARGO_HOME/bin
-cargo-license --json > dependencies.json
-cat dependencies.json
+  # Check that all downstream libraries licenses are present
+  export PATH=$PATH:$CARGO_HOME/bin
+  cargo-license --json > dependencies.json
+  cat dependencies.json
 
-python $RECIPE_DIR/check_licenses.py
+  python $RECIPE_DIR/check_licenses.py
+fi
 
 # Apply PEP517 to install the package
 maturin build --release -i $PYTHON
