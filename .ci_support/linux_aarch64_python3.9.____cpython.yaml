@@ -1,9 +1,13 @@
+BUILD:
+- aarch64-conda_cos7-linux-gnu
 c_compiler:
 - gcc
 c_compiler_version:
 - '10'
+cdt_arch:
+- aarch64
 cdt_name:
-- cos6
+- cos7
 channel_sources:
 - conda-forge/label/rust_dev,conda-forge
 channel_targets:
@@ -15,10 +19,10 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.8.* *_cpython
+- 3.9.* *_cpython
 rust_compiler:
 - rust
 rust_compiler_version:
 - 1.56.0.dev20210816
 target_platform:
-- linux-64
+- linux-aarch64
