@@ -1,5 +1,5 @@
 {% set name = "aedat" %}
-{% set version = "2.0.0" %}
+{% set version = "2.0.1" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/aedat-{{ version }}.tar.gz
-  sha256: f49086f8c232ab0f2ae1904dffe12003b442e190d8889122fd843fb5f2dbd546
+  sha256: 54b0ce87ee522c57ea9c89308d418949bdca1995f94a178a7a85724173ce8537
   patches:
     - fix-cargo.patch
 
