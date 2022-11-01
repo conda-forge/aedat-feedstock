@@ -8,8 +8,6 @@ package:
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/aedat-{{ version }}.tar.gz
   sha256: 54b0ce87ee522c57ea9c89308d418949bdca1995f94a178a7a85724173ce8537
-  patches:
-    - fix-cargo.patch
 
 build:
   number: 0
