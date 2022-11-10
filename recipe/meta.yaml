@@ -1,5 +1,5 @@
 {% set name = "aedat" %}
-{% set version = "2.0.0" %}
+{% set version = "2.0.2" %}
 
 package:
   name: {{ name|lower }}
@@ -7,13 +7,10 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/aedat-{{ version }}.tar.gz
-  sha256: f49086f8c232ab0f2ae1904dffe12003b442e190d8889122fd843fb5f2dbd546
-  patches:
-    - fix-cargo.patch
+  sha256: ee6b6ca4fceb079262da2ace54366b258687e5b0d85866f01cb7557281aaa40e
 
 build:
   number: 0
-  skip: true  # [py<37]
 
 requirements:
   build:
@@ -21,10 +18,10 @@ requirements:
     - {{ compiler('c') }}
     - python                                 # [build_platform != target_platform]
     - cross-python_{{ target_platform }}     # [build_platform != target_platform]
+    - maturin
   host:
     - python
     - pip
-    - maturin
   run:
     - python
     - numpy
