@@ -5,19 +5,11 @@ set TEMP=%CD%\tmpbuild_%PY_VER%
 REM Print Rust version
 rustc --version
 
-REM Install cargo-license
-set CARGO_HOME=%BUILD_PREFIX%\cargo
-mkdir %CARGO_HOME%
-icacls %CARGO_HOME% /grant Users:F
-cargo install cargo-license
-
-REM Check that all downstream libraries licenses are present
-set PATH=%PATH%;%CARGO_HOME%\bin
-cargo-license --json > dependencies.json
-python %RECIPE_DIR%\check_licenses.py
-
 REM Use PEP517 to install the package
 maturin build --release -i %PYTHON%
+
+REM Bundle licenses
+cargo-bundle-licenses --format yaml --output THIRDPARTY.yml
 
 REM Install wheel
 cd target/wheels
