@@ -8,8 +8,6 @@ package:
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/aedat-{{ version }}.tar.gz
   sha256: c9c37288dc24787b1dfae50858b653b558f97a51ac8877290f8cac863dce545b
-  patches:
-    - fix-deprecated-maturin.patch
 
 build:
   number: 0
