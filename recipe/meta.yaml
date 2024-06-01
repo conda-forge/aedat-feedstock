@@ -1,5 +1,5 @@
 {% set name = "aedat" %}
-{% set version = "2.0.3" %}
+{% set version = "2.1.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/aedat-{{ version }}.tar.gz
-  sha256: c9c37288dc24787b1dfae50858b653b558f97a51ac8877290f8cac863dce545b
+  sha256: ef4fea15f029fe6c731a00721c1027b2455b6920f858f877dfec1067514aa967
 
 build:
   number: 0
@@ -16,6 +16,7 @@ requirements:
   build:
     - {{ compiler('rust') }}
     - {{ compiler('c') }}
+    - {{ stdlib("c") }}
     - python                                 # [build_platform != target_platform]
     - cross-python_{{ target_platform }}     # [build_platform != target_platform]
     - maturin
