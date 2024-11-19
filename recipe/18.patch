@@ -1,7 +1,7 @@
 From 1710f30636b664e1e220600dac7f112a51f64dcd Mon Sep 17 00:00:00 2001
 From: Tobias Fischer <info@tobiasfischer.info>
 Date: Wed, 20 Nov 2024 08:10:29 +1000
-Subject: [PATCH] Support Python 3.13
+Subject: [PATCH 1/2] Support Python 3.13
 
 ---
  Cargo.toml | 4 ++--
@@ -22,3 +22,65 @@ index 414b5d5..7d2b2c0 100644
  roxmltree = "0.20.0"
  zstd = "0.13.1"
  
+
+From 734dcf76faf9cf4c3cc3b99a99e54e491d5ac0fe Mon Sep 17 00:00:00 2001
+From: Tobias Fischer <info@tobiasfischer.info>
+Date: Wed, 20 Nov 2024 08:23:12 +1000
+Subject: [PATCH 2/2] Update lib.rs
+
+---
+ src/lib.rs | 30 +++++++++++++++++-------------
+ 1 file changed, 17 insertions(+), 13 deletions(-)
+
+diff --git a/src/lib.rs b/src/lib.rs
+index bda8c12..bd0eddf 100644
+--- a/src/lib.rs
++++ b/src/lib.rs
+@@ -5,6 +5,7 @@ use numpy::convert::ToPyArray;
+ use numpy::prelude::*;
+ use numpy::Element;
+ use pyo3::prelude::*;
++use pyo3::types::{PyAny, PyBytes, PyString};
+ 
+ impl std::convert::From<aedat_core::ParseError> for pyo3::PyErr {
+     fn from(error: aedat_core::ParseError) -> Self {
+@@ -592,23 +593,26 @@ unsafe fn set_dtype_as_list_field(
+ 
+ fn python_path_to_string(
+     python: pyo3::prelude::Python,
+-    path: &pyo3::Bound<'_, pyo3::types::PyAny>,
++    path: &PyAny,
+ ) -> PyResult<String> {
+-    if let Ok(result) = path.downcast::<pyo3::types::PyString>() {
+-        return Ok(result.to_string());
++    if let Ok(py_string) = path.downcast::<PyString>() {
++        return Ok(py_string.to_str()?.to_string());
+     }
+-    if let Ok(result) = path.downcast::<pyo3::types::PyBytes>() {
+-        return Ok(result.to_string());
++    if let Ok(py_bytes) = path.downcast::<PyBytes>() {
++        return Ok(String::from_utf8(py_bytes.as_bytes().to_vec())
++            .map_err(|e| PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("{}", e)))?);
+     }
+-    let fspath_result = path.to_object(python).call_method0(python, "__fspath__")?;
+-    {
+-        let fspath_as_string: PyResult<&pyo3::types::PyString> = fspath_result.extract(python);
+-        if let Ok(result) = fspath_as_string {
+-            return Ok(result.to_string());
+-        }
++    let fspath_result = path.call_method0("__fspath__")?;
++    if let Ok(py_string) = fspath_result.downcast::<PyString>() {
++        return Ok(py_string.to_str()?.to_string());
++    }
++    if let Ok(py_bytes) = fspath_result.downcast::<PyBytes>() {
++        return Ok(String::from_utf8(py_bytes.as_bytes().to_vec())
++            .map_err(|e| PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("{}", e)))?);
+     }
+-    let fspath_as_bytes: &pyo3::types::PyBytes = fspath_result.extract(python)?;
+-    Ok(fspath_as_bytes.to_string())
++    Err(PyErr::new::<pyo3::exceptions::PyTypeError, _>(
++        "Expected a string, bytes, or an object implementing __fspath__",
++    ))
+ }
+ 
+ #[pymodule]
