@@ -1,0 +1,24 @@
+From 1710f30636b664e1e220600dac7f112a51f64dcd Mon Sep 17 00:00:00 2001
+From: Tobias Fischer <info@tobiasfischer.info>
+Date: Wed, 20 Nov 2024 08:10:29 +1000
+Subject: [PATCH] Support Python 3.13
+
+---
+ Cargo.toml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index 414b5d5..7d2b2c0 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -12,8 +12,8 @@ crate-type = ["cdylib"]
+ flatbuffers = "24.3.25"
+ lz4 = "1.24.0"
+ ndarray = "0.15.6"
+-numpy = "0.21.0"
+-pyo3 = {version = "0.21.2", features = ["extension-module"]}
++numpy = "0.22.1"
++pyo3 = {version = "0.22.0", features = ["extension-module"]}
+ roxmltree = "0.20.0"
+ zstd = "0.13.1"
+ 
