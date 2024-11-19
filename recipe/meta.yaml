@@ -8,6 +8,8 @@ package:
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/aedat-{{ version }}.tar.gz
   sha256: ef4fea15f029fe6c731a00721c1027b2455b6920f858f877dfec1067514aa967
+  patches:
+    - 18.patch
 
 build:
   number: 1
