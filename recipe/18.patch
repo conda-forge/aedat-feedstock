@@ -1,12 +1,3 @@
-From 1710f30636b664e1e220600dac7f112a51f64dcd Mon Sep 17 00:00:00 2001
-From: Tobias Fischer <info@tobiasfischer.info>
-Date: Wed, 20 Nov 2024 08:10:29 +1000
-Subject: [PATCH 1/2] Support Python 3.13
-
----
- Cargo.toml | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
 diff --git a/Cargo.toml b/Cargo.toml
 index 414b5d5..7d2b2c0 100644
 --- a/Cargo.toml
@@ -22,18 +13,8 @@ index 414b5d5..7d2b2c0 100644
  roxmltree = "0.20.0"
  zstd = "0.13.1"
  
-
-From 734dcf76faf9cf4c3cc3b99a99e54e491d5ac0fe Mon Sep 17 00:00:00 2001
-From: Tobias Fischer <info@tobiasfischer.info>
-Date: Wed, 20 Nov 2024 08:23:12 +1000
-Subject: [PATCH 2/2] Update lib.rs
-
----
- src/lib.rs | 30 +++++++++++++++++-------------
- 1 file changed, 17 insertions(+), 13 deletions(-)
-
 diff --git a/src/lib.rs b/src/lib.rs
-index bda8c12..bd0eddf 100644
+index bda8c12..80d1f9f 100644
 --- a/src/lib.rs
 +++ b/src/lib.rs
 @@ -5,6 +5,7 @@ use numpy::convert::ToPyArray;
@@ -44,21 +25,25 @@ index bda8c12..bd0eddf 100644
  
  impl std::convert::From<aedat_core::ParseError> for pyo3::PyErr {
      fn from(error: aedat_core::ParseError) -> Self {
-@@ -592,23 +593,26 @@ unsafe fn set_dtype_as_list_field(
+@@ -591,24 +592,31 @@ unsafe fn set_dtype_as_list_field(
+ }
  
  fn python_path_to_string(
-     python: pyo3::prelude::Python,
+-    python: pyo3::prelude::Python,
 -    path: &pyo3::Bound<'_, pyo3::types::PyAny>,
++    python: Python,
 +    path: &PyAny,
  ) -> PyResult<String> {
 -    if let Ok(result) = path.downcast::<pyo3::types::PyString>() {
 -        return Ok(result.to_string());
-+    if let Ok(py_string) = path.downcast::<PyString>() {
++    if path.is_instance::<PyString>()? {
++        let py_string: &PyString = path.extract()?;
 +        return Ok(py_string.to_str()?.to_string());
      }
 -    if let Ok(result) = path.downcast::<pyo3::types::PyBytes>() {
 -        return Ok(result.to_string());
-+    if let Ok(py_bytes) = path.downcast::<PyBytes>() {
++    if path.is_instance::<PyBytes>()? {
++        let py_bytes: &PyBytes = path.extract()?;
 +        return Ok(String::from_utf8(py_bytes.as_bytes().to_vec())
 +            .map_err(|e| PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("{}", e)))?);
      }
@@ -69,10 +54,12 @@ index bda8c12..bd0eddf 100644
 -            return Ok(result.to_string());
 -        }
 +    let fspath_result = path.call_method0("__fspath__")?;
-+    if let Ok(py_string) = fspath_result.downcast::<PyString>() {
++    if fspath_result.is_instance::<PyString>()? {
++        let py_string: &PyString = fspath_result.extract()?;
 +        return Ok(py_string.to_str()?.to_string());
 +    }
-+    if let Ok(py_bytes) = fspath_result.downcast::<PyBytes>() {
++    if fspath_result.is_instance::<PyBytes>()? {
++        let py_bytes: &PyBytes = fspath_result.extract()?;
 +        return Ok(String::from_utf8(py_bytes.as_bytes().to_vec())
 +            .map_err(|e| PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("{}", e)))?);
      }
