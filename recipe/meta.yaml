@@ -1,16 +1,16 @@
 {% set name = "aedat" %}
-{% set version = "2.2.0" %}
+{% set version = "2.3.0" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/aedat-{{ version }}.tar.gz
-  sha256: a2e2d36745863c85ef6723f6a7ab90ed972808f07f3dd7cd7f66d9d54cb527a0
+  url: https://files.pythonhosted.org/packages/source/{{ name[0] }}/{{ name }}/aedat-{{ version }}.tar.gz
+  sha256: c7083e298344efb937fdf141d1f4a2db3a43f91744fd70dc06ad7592777b662e
 
 build:
-  number: 1
+  number: 0
 
 requirements:
   build:
